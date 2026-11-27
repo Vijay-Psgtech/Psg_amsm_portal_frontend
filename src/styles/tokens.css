@@ -1,0 +1,56 @@
+/* Design tokens, taken from the faculty deck's theme (navy, gold, Cambria / Calibri). */
+:root {
+  /* Brand */
+  --navy: #1b2a4a;
+  --navy-2: #24365c;
+  --navy-3: #2b3d63;
+  --gold: #e0a526;
+  --gold-hover: #ebb548;
+  --gold-dark: #c2861a;
+  --gold-text: #8c6a12; /* gold that passes 4.5:1 on white */
+  --gold-ink: #7a5608;
+  --gold-tint: #fff8e8;
+  --blue: #2e5e8c;
+
+  /* Neutrals */
+  --slate: #475569;
+  --muted: #5b6b82;
+  --line: #e4e9f1;
+  --line-2: #c3cedd;
+  --line-3: #dce3ec;
+  --bg: #ffffff;
+  --bg-soft: #f4f6fa;
+  --chip-soft: #eef1f5;
+
+  /* Framework identity (checked for colour-blind separation) */
+  --star: #2f6db5;
+  --star-tint: #e8eff8;
+  --star-ink: #1f4f8a;
+  --idea: #c2861a;
+  --idea-tint: #fbf1dc;
+  --idea-ink: #7a5608;
+  --grad: #1e9e83;
+  --grad-tint: #e2f3ee;
+  --grad-ink: #0e6552;
+
+  /* Status */
+  --good: #006300;
+  --good-tint: #e6f4e6;
+  --warn-tint: #fff3d6;
+  --required: #a9441c;
+
+  /* Type */
+  --font-serif: 'Caladea', Cambria, Georgia, serif;
+  --font-sans: 'Carlito', Calibri, 'Segoe UI', system-ui, sans-serif;
+
+  /* Shape */
+  --radius-sm: 10px;
+  --radius: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 22px;
+  --shadow-sm: 0 2px 6px rgba(27, 42, 74, 0.05);
+  --shadow: 0 14px 30px rgba(27, 42, 74, 0.12);
+  --shadow-lg: 0 24px 60px rgba(27, 42, 74, 0.14);
+
+  --container: 1240px;
+}

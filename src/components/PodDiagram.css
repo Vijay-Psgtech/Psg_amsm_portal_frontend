@@ -1,0 +1,95 @@
+.pod {
+  position: relative;
+  width: 100%;
+  max-width: 540px;
+  aspect-ratio: 520 / 420;
+  margin-inline: auto;
+}
+.pod--sm {
+  max-width: 380px;
+}
+.pod__svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.pod__fan {
+  fill: #e4eaf3;
+  stroke: var(--gold-dark);
+  stroke-width: 2;
+  stroke-dasharray: 9 7;
+}
+.pod__arc {
+  fill: none;
+  stroke: #9fb2cc;
+  stroke-width: 1.5;
+}
+.pod__link {
+  stroke: var(--gold-dark);
+  stroke-width: 2;
+  stroke-dasharray: 6 5;
+}
+.pod__node {
+  position: absolute;
+  aspect-ratio: 1 / 1;
+  padding: 0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s ease, box-shadow 0.2s ease;
+}
+button.pod__node {
+  cursor: pointer;
+}
+.pod__node--student {
+  width: 11.54%;
+  border: 3px solid #fff;
+  background: var(--blue);
+  color: #fff;
+}
+.pod__node--mentor {
+  left: 41.92%;
+  top: 76.19%;
+  width: 16.15%;
+  border: 4px solid #fff;
+  background: var(--navy);
+  color: var(--gold);
+}
+.pod__node--tutor {
+  left: 82.69%;
+  top: 6.19%;
+  width: 12.31%;
+  border: 2px dashed var(--gold-dark);
+  background: #fff;
+  color: var(--gold-dark);
+}
+.pod__initials {
+  font-size: 15px;
+  font-weight: 700;
+}
+.pod--sm .pod__initials {
+  font-size: 13px;
+}
+.pod__label {
+  position: absolute;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+}
+.pod__label--mentor {
+  left: 60.5%;
+  top: 85.2%;
+  color: var(--navy);
+}
+.pod__label--tutor {
+  left: 67.5%;
+  top: 11.4%;
+  color: var(--gold-text);
+}
+@media (prefers-reduced-motion: reduce) {
+  .pod__node {
+    transition: none;
+  }
+}

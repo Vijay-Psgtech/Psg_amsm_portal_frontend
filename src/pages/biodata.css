@@ -1,0 +1,60 @@
+.role-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  border-radius: 16px;
+  border: 2px solid var(--line);
+  background: #fff;
+  color: var(--navy);
+  text-align: left;
+  cursor: pointer;
+}
+.role-card.is-on {
+  border-color: var(--gold);
+  background: var(--gold-tint);
+}
+.role-card__title {
+  font-size: 19px;
+  font-weight: 700;
+}
+.bio-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+  gap: 16px 18px;
+}
+.bio-grid > div {
+  min-width: 0;
+}
+.bio-grid__wide {
+  grid-column: 1 / -1;
+}
+.bio-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--gold);
+  background: var(--gold-tint);
+  font-size: 15px;
+}
+.bio-done {
+  font-size: 22px;
+  font-weight: 700;
+}
+.bio-meter {
+  height: 10px;
+  border-radius: 999px;
+  background: var(--line-3);
+}
+.bio-meter__fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--blue);
+  transition: width 0.2s ease;
+}
+.bio-preview__name {
+  font-size: 18px;
+  font-weight: 700;
+}

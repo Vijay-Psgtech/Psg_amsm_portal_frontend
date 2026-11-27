@@ -1,0 +1,8 @@
+# For Apache servers: send every page address (e.g. /dashboard) to index.html,
+# so links and refreshes work. Other web servers ignore this file; see README.md.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . index.html [L]
+</IfModule>

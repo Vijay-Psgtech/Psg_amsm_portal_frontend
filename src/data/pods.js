@@ -1,0 +1,208 @@
+/**
+ * Sample data for the impact dashboard (illustrative only: names and figures are made up).
+ * Replace with records from the portal: pod pairing, session attendance and the
+ * framework step each mentor records after a session.
+ */
+
+export const DASHBOARD_MENTORS = {
+  m1: { name: 'Meera Subramanian', role: 'Director, Supply Chain', industry: 'Automotive' },
+  m2: { name: 'Karthik Rangan', role: 'Principal Engineer, chip design', industry: 'Electronics and Semiconductors' },
+  m3: { name: 'Anitha Devaraj', role: 'Founder, retail analytics start-up', industry: 'Product' },
+  m4: { name: 'Vimal S.', role: 'Engineering Manager, cloud platforms', industry: 'Information Technology' },
+  m5: { name: 'Priya Natarajan', role: 'Data Science Lead', industry: 'Banking and Financial Services' },
+  m6: { name: 'Senthil Murugan', role: 'Plant Head, specialty chemicals', industry: 'Chemical' },
+  m7: { name: 'Deepa Raghavan', role: 'Research Scientist, energy storage', industry: 'Energy' },
+  m8: { name: 'Harish Balaji', role: 'Product Manager, EV start-up', industry: 'Automotive' },
+  m9: { name: 'Revathi Krishnan', role: 'VP Engineering, fintech', industry: 'Banking and Financial Services' },
+  m10: { name: 'Ganesh Ramasamy', role: 'Quality Head, foundry', industry: 'Manufacturing' },
+  m11: { name: 'Kavitha Sundaram', role: 'Researcher, biomedical devices', industry: 'Healthcare and Insurance' },
+  m12: { name: 'Prakash Venkatesh', role: 'Co-founder, precision components start-up', industry: 'Manufacturing' },
+  m13: { name: 'Nandini Iyer', role: 'Director of Product, SaaS', industry: 'Product' },
+  m14: { name: 'Ramesh Chandran', role: 'Project Director, solar parks', industry: 'Construction' },
+  m15: { name: 'Lakshmi Narayanan', role: 'Product Director, health insurance', industry: 'Healthcare and Insurance' },
+  m16: { name: 'Arun Kumar V.', role: 'Hardware Design Lead', industry: 'Electronics and Semiconductors' },
+};
+
+// Pod:    [id, cycle, mentorId, tutor's department, sessions held, mentees]
+// Mentee: [name, department, framework, step reached (1–4), sessions attended]
+const RAW_PODS = [
+  ['C1-01', 1, 'm1', 'Mechanical', 4, [
+    ['Yamini E.', 'Mechanical', 'STAR', 4, 4],
+    ['Jeeva V.', 'Mechanical', 'IDEA', 4, 4],
+    ['Mohan K.', 'Mechanical', 'IDEA', 4, 4],
+    ['Bala J.', 'Mechanical', 'IDEA', 4, 4],
+    ['Vaishnavi N.', 'Mechanical', 'STAR', 4, 4],
+  ]],
+  ['C1-02', 1, 'm2', 'ECE', 4, [
+    ['Siddharth D.', 'ECE', 'STAR', 4, 3],
+    ['Keerthana L.', 'ECE', 'STAR', 4, 4],
+    ['Rithika C.', 'ECE', 'STAR', 4, 4],
+    ['Abinaya K.', 'ECE', 'STAR', 4, 4],
+    ['Kaviya D.', 'ECE', 'STAR', 4, 4],
+  ]],
+  ['C1-03', 1, 'm3', 'CSE', 4, [
+    ['Ilakkiya T.', 'CSE', 'STAR', 4, 4],
+    ['Madhan E.', 'CSE', 'IDEA', 4, 4],
+    ['Nithya K.', 'CSE', 'STAR', 4, 4],
+    ['Gautham N.', 'CSE', 'IDEA', 4, 3],
+    ['Naveen H.', 'CSE', 'STAR', 3, 4],
+  ]],
+  ['C1-04', 1, 'm4', 'IT', 4, [
+    ['Tharun S.', 'IT', 'STAR', 4, 4],
+    ['Manoj J.', 'Metallurgy', 'GRAD', 4, 4],
+    ['Sanjay P.', 'IT', 'IDEA', 4, 4],
+    ['Abinaya N.', 'IT', 'STAR', 4, 4],
+    ['Fathima N.', 'IT', 'GRAD', 4, 3],
+  ]],
+  ['C1-05', 1, 'm5', 'CSE', 4, [
+    ['Naveen B.', 'Metallurgy', 'STAR', 4, 4],
+    ['Santhosh G.', 'Mechanical', 'STAR', 4, 4],
+    ['Srinath D.', 'Production', 'STAR', 4, 4],
+    ['Karthika N.', 'CSE', 'GRAD', 3, 4],
+    ['Ilakkiya C.', 'CSE', 'GRAD', 4, 4],
+  ]],
+  ['C1-06', 1, 'm6', 'Textile', 4, [
+    ['Roshini E.', 'Textile', 'IDEA', 4, 4],
+    ['Dharani N.', 'Textile', 'STAR', 4, 4],
+    ['Logesh C.', 'Textile', 'STAR', 4, 4],
+    ['Priyanka P.', 'Textile', 'STAR', 4, 4],
+    ['Uma G.', 'Metallurgy', 'STAR', 4, 4],
+  ]],
+  ['C1-07', 1, 'm7', 'EEE', 4, [
+    ['Roshini B.', 'EEE', 'GRAD', 4, 3],
+    ['Dhanush T.', 'EEE', 'GRAD', 3, 3],
+    ['Rakesh V.', 'IT', 'GRAD', 4, 4],
+    ['Pranav D.', 'EEE', 'GRAD', 4, 4],
+    ['Eswar G.', 'EEE', 'GRAD', 4, 3],
+  ]],
+  ['C1-08', 1, 'm8', 'Automobile', 4, [
+    ['Siddharth B.', 'Civil', 'IDEA', 4, 4],
+    ['Gayathri M.', 'Automobile', 'IDEA', 3, 4],
+    ['Sanjay N.', 'Automobile', 'STAR', 4, 4],
+    ['Harini B.', 'Automobile', 'IDEA', 4, 3],
+    ['Charan B.', 'Automobile', 'IDEA', 4, 3],
+  ]],
+  ['C1-09', 1, 'm9', 'IT', 4, [
+    ['Oviya B.', 'Automobile', 'STAR', 4, 4],
+    ['Gautham B.', 'IT', 'STAR', 4, 4],
+    ['Ananya A.', 'IT', 'STAR', 4, 4],
+    ['Naveen A.', 'IT', 'STAR', 4, 4],
+    ['Pradeep E.', 'IT', 'STAR', 4, 4],
+  ]],
+  ['C1-10', 1, 'm10', 'Metallurgy', 4, [
+    ['Sanjay A.', 'Metallurgy', 'GRAD', 4, 4],
+    ['Tejas T.', 'Production', 'STAR', 4, 3],
+    ['Santhosh T.', 'Textile', 'STAR', 4, 4],
+    ['Rithika V.', 'Metallurgy', 'STAR', 4, 4],
+    ['Meenakshi J.', 'Metallurgy', 'STAR', 4, 4],
+  ]],
+  ['C2-01', 2, 'm1', 'Production', 3, [
+    ['Vignesh M.', 'Production', 'STAR', 4, 3],
+    ['Eswar P.', 'Production', 'STAR', 4, 3],
+    ['Bharath R.', 'Production', 'STAR', 3, 3],
+    ['Madhan G.', 'Production', 'STAR', 3, 2],
+    ['Deepak S.', 'Metallurgy', 'STAR', 3, 3],
+  ]],
+  ['C2-02', 2, 'm2', 'EEE', 2, [
+    ['Dharani H.', 'EEE', 'STAR', 2, 2],
+    ['Deepak T.', 'EEE', 'STAR', 2, 1],
+    ['Eswar L.', 'EEE', 'STAR', 2, 2],
+    ['Ranjani R.', 'EEE', 'GRAD', 3, 2],
+    ['Aishwarya M.', 'EEE', 'STAR', 2, 2],
+  ]],
+  ['C2-03', 2, 'm3', 'CSE', 3, [
+    ['Charan K.', 'CSE', 'IDEA', 3, 3],
+    ['Vaishnavi G.', 'CSE', 'IDEA', 4, 3],
+    ['Fathima R.', 'Civil', 'IDEA', 4, 3],
+    ['Lokesh M.', 'CSE', 'IDEA', 2, 3],
+    ['Hari R.', 'CSE', 'IDEA', 2, 3],
+  ]],
+  ['C2-04', 2, 'm4', 'CSE', 2, [
+    ['Arjun P.', 'CSE', 'STAR', 3, 2],
+    ['Kavya R.', 'IT', 'IDEA', 2, 2],
+    ['Sneha K.', 'ECE', 'GRAD', 4, 2],
+    ['Divya S.', 'CSE', 'STAR', 1, 1],
+    ['Rahul M.', 'Mechanical', 'IDEA', 1, 1],
+  ]],
+  ['C2-05', 2, 'm5', 'CSE', 2, [
+    ['Saranya L.', 'CSE', 'STAR', 2, 2],
+    ['Gayathri K.', 'CSE', 'STAR', 2, 2],
+    ['Pradeep K.', 'Biotechnology', 'GRAD', 1, 2],
+    ['Akash J.', 'CSE', 'STAR', 3, 2],
+    ['Naveen C.', 'CSE', 'STAR', 2, 2],
+  ]],
+  ['C2-06', 2, 'm6', 'Textile', 3, [
+    ['Priyanka E.', 'Textile', 'STAR', 3, 3],
+    ['Abinaya E.', 'ECE', 'IDEA', 3, 3],
+    ['Vaishnavi C.', 'Textile', 'STAR', 4, 3],
+    ['Vishnu B.', 'Textile', 'IDEA', 3, 3],
+    ['Shruthi K.', 'Production', 'IDEA', 3, 3],
+  ]],
+  ['C2-07', 2, 'm7', 'EEE', 1, [
+    ['Janani C.', 'EEE', 'STAR', 1, 1],
+    ['Siddharth G.', 'EEE', 'GRAD', 2, 1],
+    ['Anand M.', 'Civil', 'GRAD', 1, 1],
+    ['Vignesh T.', 'EEE', 'GRAD', 1, 1],
+    ['Pavithra M.', 'Textile', 'GRAD', 1, 1],
+  ]],
+  ['C2-08', 2, 'm9', 'Mechanical', 2, [
+    ['Shreya R.', 'Mechanical', 'STAR', 2, 2],
+    ['Bharath V.', 'EEE', 'STAR', 2, 1],
+    ['Tharun P.', 'Mechanical', 'STAR', 2, 2],
+    ['Keerthi A.', 'Mechanical', 'STAR', 1, 2],
+    ['Oviya L.', 'Civil', 'STAR', 2, 1],
+  ]],
+  ['C2-09', 2, 'm11', 'Biotechnology', 1, [
+    ['Aravind E.', 'Biotechnology', 'GRAD', 1, 1],
+    ['Sanjay H.', 'Biotechnology', 'GRAD', 1, 1],
+    ['Karthika L.', 'Biotechnology', 'GRAD', 1, 1],
+    ['Charan J.', 'Biotechnology', 'GRAD', 1, 1],
+    ['Bhuvana A.', 'Biotechnology', 'STAR', 1, 1],
+  ]],
+  ['C2-10', 2, 'm12', 'Mechanical', 2, [
+    ['Praveen G.', 'Mechanical', 'IDEA', 2, 2],
+    ['Praveen A.', 'Biotechnology', 'STAR', 3, 2],
+    ['Aravind N.', 'Mechanical', 'IDEA', 2, 2],
+    ['Kishore N.', 'Mechanical', 'IDEA', 2, 2],
+    ['Siddharth H.', 'Mechanical', 'STAR', 2, 2],
+  ]],
+  ['C2-11', 2, 'm13', 'IT', 3, [
+    ['Siddharth M.', 'IT', 'STAR', 3, 3],
+    ['Aditya G.', 'IT', 'GRAD', 4, 3],
+    ['Sabari H.', 'IT', 'STAR', 2, 3],
+    ['Aravind K.', 'CSE', 'GRAD', 4, 3],
+    ['Uma R.', 'IT', 'STAR', 3, 3],
+  ]],
+  ['C2-12', 2, 'm14', 'Civil', 1, [
+    ['Dinesh C.', 'Civil', 'STAR', 2, 0],
+    ['Bharath H.', 'Civil', 'STAR', 1, 0],
+    ['Vishnu E.', 'Civil', 'STAR', 2, 0],
+    ['Monisha J.', 'Civil', 'STAR', 1, 1],
+    ['Aishwarya H.', 'Automobile', 'STAR', 1, 1],
+  ]],
+  ['C2-13', 2, 'm15', 'CSE', 2, [
+    ['Bala M.', 'CSE', 'STAR', 2, 2],
+    ['Jagan V.', 'CSE', 'STAR', 3, 2],
+    ['Pavithra S.', 'CSE', 'STAR', 3, 2],
+    ['Gokul C.', 'CSE', 'STAR', 3, 2],
+    ['Gautham A.', 'Production', 'STAR', 3, 2],
+  ]],
+  ['C2-14', 2, 'm16', 'ECE', 2, [
+    ['Deepak H.', 'ECE', 'GRAD', 2, 2],
+    ['Keerthana S.', 'ECE', 'STAR', 2, 2],
+    ['Saranya S.', 'ECE', 'STAR', 2, 2],
+    ['Lokesh H.', 'ECE', 'STAR', 2, 2],
+    ['Lokesh B.', 'ECE', 'GRAD', 2, 2],
+  ]],
+];
+
+export const PODS = RAW_PODS.map(([id, cycle, mentorId, tutorDept, sessions, mentees]) => ({
+  id,
+  cycle,
+  status: cycle === 1 ? 'completed' : 'in-progress',
+  mentorId,
+  mentor: DASHBOARD_MENTORS[mentorId],
+  tutorDept,
+  sessions,
+  mentees: mentees.map(([name, dept, fw, step, attended]) => ({ name, dept, fw, step, attended })),
+}));
