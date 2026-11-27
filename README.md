@@ -34,6 +34,8 @@ The API listens on port `5000` by default. Set `VITE_API_URL` in the client's en
 
 Profiles are stored with their role-specific details; passwords are bcrypt-hashed and never returned. Login uses email for mentors and coordinators, and roll number or email for mentees. Mentors may also sign in with the mobile number in their profile. Successful sign-in uses an HTTP-only session cookie and protected portal routes check both the session and role.
 
+The app's `AuthProvider` loads and owns the current user/profile and exposes login, logout, and refresh actions through `useAuth()`. Components use context and services rather than making authentication requests directly; request handling lives in `src/services/`.
+
 ## Pages
 
 | Address | Page | What it shows |
@@ -63,8 +65,10 @@ src/
   pages/                One file per page, each with its own .css
   components/           Shared pieces: headers, footer, icons, form fields,
                         framework chips, step chips, pod diagram
+  context/              Global authentication and current-user state
   data/                 Program wording and sample data (see below)
   lib/                  Dashboard calculations, formatting, page titles
+  services/             API client, authentication, and profile requests
   styles/
     tokens.css          Brand colours, fonts, spacing, radii
     base.css            Typography, buttons, chips, cards, form controls
@@ -119,12 +123,11 @@ Mentors are grouped by **industry** (Manufacturing, Energy, Construction, Chemic
 
 ## Connecting real data
 
-The pages read sample data from `src/data/` and keep all changes in memory. To make the portal live:
+The mentoring workflows and dashboard still read sample data from `src/data/`. The remaining connections are:
 
 | Where | What to connect |
 |---|---|
 | `server/routes/authRoutes.js`, `server/controllers/authController.js` | Profile registration, password login and session lookup |
-| `src/pages/Login.jsx` and `src/pages/Biodata.jsx` | Connected to the API through `src/lib/api.js` |
 | `src/pages/StudentPortal.jsx`, `send` | Sending a mentor request; load mentors and problems from the API instead of `data/` |
 | `src/pages/MentorPortal.jsx`, `accept`, `decline`, `undo`, `addProblem`, `recordSession`, `saveFeedback` and the step chips | The mentor's pod, requests, sessions and feedback |
 | `src/pages/Dashboard.jsx` with `src/data/pods.js` | Pod records. The calculations in `src/lib/dashboard.js` take pods in the same shape as `pods.js`, so only the data source needs to change |

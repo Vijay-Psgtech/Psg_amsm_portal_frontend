@@ -5,7 +5,7 @@ import Icon from '../components/Icon.jsx';
 import { CheckField, ChipField, SelectField, TextField } from '../components/Field.jsx';
 import { DEPARTMENTS, FRAMEWORKS, PROFILE_INDUSTRIES, TRACKS, TRACK_FRAMEWORK, frameworkOfTrack } from '../data/taxonomy.js';
 import { initials, pct } from '../lib/format.js';
-import { apiRequest } from '../lib/api.js';
+import { registerProfile } from '../services/profileService.js';
 import usePageTitle from '../lib/usePageTitle.js';
 import './biodata.css';
 
@@ -326,10 +326,7 @@ export default function Biodata() {
     setError('');
     const { password, confirmPassword: _confirmPassword, ...profile } = v;
     try {
-      await apiRequest('/auth/register', {
-        method: 'POST',
-        body: JSON.stringify({ role, profile, password }),
-      });
+      await registerProfile({ role, profile, password });
       setValues((current) => ({
         ...current,
         [role]: { ...current[role], password: '', confirmPassword: '' },

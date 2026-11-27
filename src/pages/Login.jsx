@@ -4,7 +4,7 @@ import Brand from '../components/Brand.jsx';
 import Icon from '../components/Icon.jsx';
 import Segmented from '../components/Segmented.jsx';
 import { HERO_IMAGE, HERO_IMAGE_ALT, ROLE_HOME } from '../config.js';
-import { apiRequest } from '../lib/api.js';
+import { useAuth } from '../context/AuthContext.jsx';
 import usePageTitle from '../lib/usePageTitle.js';
 import './login.css';
 
@@ -42,6 +42,7 @@ export default function Login() {
   usePageTitle('Sign in');
 
   const navigate = useNavigate();
+  const { login } = useAuth();
   const { search } = useLocation();
   const requestedRole = new URLSearchParams(search).get('role');
   const initialRole = requestedRole === 'mentor' || requestedRole === 'coordinator' ? requestedRole : 'student';
@@ -65,10 +66,7 @@ export default function Login() {
     setSubmitting(true);
     setError('');
     try {
-      await apiRequest('/auth/login', {
-        method: 'POST',
-        body: JSON.stringify({ role: r.profile, identifier, password, remember }),
-      });
+      await login({ role: r.profile, identifier, password, remember });
       navigate(ROLE_HOME[role], { replace: true });
     } catch (requestError) {
       setError(requestError.message);

@@ -3,7 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import Brand from './Brand.jsx';
 import Icon from './Icon.jsx';
 import { SHOW_SAMPLE_LABELS } from '../config.js';
-import { apiRequest } from '../lib/api.js';
+import { useAuth } from '../context/AuthContext.jsx';
+import { initials } from '../lib/format.js';
 
 /**
  * Header for signed-in pages.
@@ -12,13 +13,20 @@ import { apiRequest } from '../lib/api.js';
  */
 export default function PortalHeader({ user, tabs, view }) {
   const navigate = useNavigate();
+  const { user: authUser, logout } = useAuth();
   const [signingOut, setSigningOut] = useState(false);
   const [signOutError, setSignOutError] = useState('');
+  const displayName = authUser?.profile?.name || authUser?.name || user.name;
+  const displayRole = {
+    mentor: 'Alumni mentor',
+    mentee: 'Student',
+    coordinator: 'Program coordinator',
+  }[authUser?.role] || user.role;
   const signOut = async () => {
     setSigningOut(true);
     setSignOutError('');
     try {
-      await apiRequest('/auth/logout', { method: 'POST' });
+      await logout();
       navigate('/login', { replace: true });
     } catch (error) {
       setSignOutError(error.message);
@@ -40,9 +48,9 @@ export default function PortalHeader({ user, tabs, view }) {
             </label>
             <span className="user-chip">
               <span className="avatar avatar--md tone-gold" aria-hidden="true">
-                {user.initials}
+                {authUser ? initials(displayName) : user.initials}
               </span>
-              {user.name} · {user.role}
+              {displayName} · {displayRole}
             </span>
             <button type="button" className="signout" onClick={signOut} disabled={signingOut}>
               {signingOut ? 'Signing out…' : 'Sign out'}
