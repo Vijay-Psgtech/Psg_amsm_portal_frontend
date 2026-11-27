@@ -117,13 +117,6 @@
   margin: 0;
   accent-color: var(--navy);
 }
-.auth-code {
-  width: 220px;
-  max-width: 100%;
-  min-height: 48px;
-  font-size: 20px;
-  letter-spacing: 0.4em;
-}
 .auth-divider {
   display: flex;
   align-items: center;

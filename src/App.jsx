@@ -1,4 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
+import ProtectedRoute from './components/ProtectedRoute.jsx';
 import ScrollToTop from './components/ScrollToTop.jsx';
 import Home from './pages/Home.jsx';
 import Frameworks from './pages/Frameworks.jsx';
@@ -15,11 +16,11 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/frameworks" element={<Frameworks />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/dashboard" element={<ProtectedRoute role="coordinator"><Dashboard /></ProtectedRoute>} />
         <Route path="/login" element={<Login />} />
         <Route path="/profile" element={<Biodata />} />
-        <Route path="/student" element={<StudentPortal />} />
-        <Route path="/mentor" element={<MentorPortal />} />
+        <Route path="/student" element={<ProtectedRoute role="mentee"><StudentPortal /></ProtectedRoute>} />
+        <Route path="/mentor" element={<ProtectedRoute role="mentor"><MentorPortal /></ProtectedRoute>} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </>

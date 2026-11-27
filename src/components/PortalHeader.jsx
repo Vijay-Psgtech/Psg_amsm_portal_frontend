@@ -1,7 +1,9 @@
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import Brand from './Brand.jsx';
 import Icon from './Icon.jsx';
 import { SHOW_SAMPLE_LABELS } from '../config.js';
+import { apiRequest } from '../lib/api.js';
 
 /**
  * Header for signed-in pages.
@@ -9,6 +11,22 @@ import { SHOW_SAMPLE_LABELS } from '../config.js';
  *       or [{ label, to }] for other routes.
  */
 export default function PortalHeader({ user, tabs, view }) {
+  const navigate = useNavigate();
+  const [signingOut, setSigningOut] = useState(false);
+  const [signOutError, setSignOutError] = useState('');
+  const signOut = async () => {
+    setSigningOut(true);
+    setSignOutError('');
+    try {
+      await apiRequest('/auth/logout', { method: 'POST' });
+      navigate('/login', { replace: true });
+    } catch (error) {
+      setSignOutError(error.message);
+    } finally {
+      setSigningOut(false);
+    }
+  };
+
   return (
     <>
       <header className="portal-header">
@@ -26,9 +44,14 @@ export default function PortalHeader({ user, tabs, view }) {
               </span>
               {user.name} · {user.role}
             </span>
-            <Link to="/login" className="signout">
-              Sign out
-            </Link>
+            <button type="button" className="signout" onClick={signOut} disabled={signingOut}>
+              {signingOut ? 'Signing out…' : 'Sign out'}
+            </button>
+            {signOutError ? (
+              <span className="small" role="alert">
+                {signOutError}
+              </span>
+            ) : null}
           </div>
         </div>
       </header>

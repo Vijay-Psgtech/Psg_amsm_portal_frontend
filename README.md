@@ -1,8 +1,8 @@
-# Mentor – Mentee Program at PSG Tech: portal (React)
+# Mentor – Mentee Program at PSG Tech
 
-The React codebase for the program portal wireframe: seven pages that follow the faculty deck's Vision, Mission, frameworks (STAR, IDEA, GRAD), 1:5 mentor pods and sample portal.
+The React/Vite portal and Node/Express API for the program. Profile registration and password sign-in use MongoDB; the mentoring portals, dashboard, and program content still use sample data.
 
-Everything works in the browser with sample data. Nothing is sent to a server or saved yet. The places to connect a real API are listed under [Connecting real data](#connecting-real-data).
+The frontend follows the faculty deck's Vision, Mission, frameworks (STAR, IDEA, GRAD), 1:5 mentor pods, and sample portal design.
 
 ## Quick start
 
@@ -15,17 +15,36 @@ npm run build     # production files in dist/
 npm run preview   # serve dist/ locally to check the build
 ```
 
+## Start the API
+
+The API requires Node.js 20 or newer and a MongoDB instance. In a separate terminal:
+
+```bash
+cd ../server
+npm install
+```
+
+Create `server/.env` using `server/.env.example` as a reference. Keep any existing local settings, set `MONGO_URI`, and set `JWT_SECRET` to a unique random value of at least 32 characters. Then run:
+
+```bash
+npm run dev
+```
+
+The API listens on port `5000` by default. Set `VITE_API_URL` in the client's environment if the API is hosted elsewhere; the default is `http://localhost:5000/api`. Set `CLIENT_ORIGIN` on the server when the frontend origin is different from `http://localhost:5173`.
+
+Profiles are stored with their role-specific details; passwords are bcrypt-hashed and never returned. Login uses email for mentors and coordinators, and roll number or email for mentees. Mentors may also sign in with the mobile number in their profile. Successful sign-in uses an HTTP-only session cookie and protected portal routes check both the session and role.
+
 ## Pages
 
 | Address | Page | What it shows |
 |---|---|---|
 | `/` | Home | From classroom learning to industry readiness, Vision and Mission, the five pillars, the three paths, the 1:5 mentor pod and the four-session journey |
 | `/frameworks` | Frameworks | STAR, IDEA and GRAD on the shared four-step rhythm (Understand, Define, Act, Review), with a step-by-step mentor guide for each path |
-| `/dashboard` | Impact dashboard | Students reached by framework, mentor industry and stage; road to scale; every mentor pod and each student's step |
-| `/login` | Sign in | One sign-in for students, alumni mentors and program coordinators |
-| `/profile?role=mentor` | Bio-data | Profile forms for mentor, mentee (`role=mentee`) and program coordinator (`role=coordinator`), with a live preview |
-| `/student` | Student portal | Choose a path, pick a mentor, attach an industry problem, send the request |
-| `/mentor` | Mentor portal | Mentor directory, industry problem pool, mentee requests, and progress for the mentor's pod |
+| `/dashboard` | Impact dashboard | Students reached by framework, mentor industry and stage; road to scale; every mentor pod and each student's step (sample data) |
+| `/login` | Sign in | Password sign-in for students, alumni mentors and program coordinators |
+| `/profile?role=mentor` | Bio-data | Register mentor, mentee (`role=mentee`) and program coordinator (`role=coordinator`) profiles |
+| `/student` | Student portal | Choose a path, pick a mentor, attach an industry problem, send the request (sample data) |
+| `/mentor` | Mentor portal | Mentor directory, industry problem pool, mentee requests, and progress for the mentor's pod (sample data) |
 
 Any other address goes back to Home.
 
@@ -104,8 +123,8 @@ The pages read sample data from `src/data/` and keep all changes in memory. To m
 
 | Where | What to connect |
 |---|---|
-| `src/pages/Login.jsx`, `submit` | The college sign-in service (to be confirmed with the college IT team) |
-| `src/pages/Biodata.jsx`, `submit` and **Save draft** | Saving a profile |
+| `server/routes/authRoutes.js`, `server/controllers/authController.js` | Profile registration, password login and session lookup |
+| `src/pages/Login.jsx` and `src/pages/Biodata.jsx` | Connected to the API through `src/lib/api.js` |
 | `src/pages/StudentPortal.jsx`, `send` | Sending a mentor request; load mentors and problems from the API instead of `data/` |
 | `src/pages/MentorPortal.jsx`, `accept`, `decline`, `undo`, `addProblem`, `recordSession`, `saveFeedback` and the step chips | The mentor's pod, requests, sessions and feedback |
 | `src/pages/Dashboard.jsx` with `src/data/pods.js` | Pod records. The calculations in `src/lib/dashboard.js` take pods in the same shape as `pods.js`, so only the data source needs to change |

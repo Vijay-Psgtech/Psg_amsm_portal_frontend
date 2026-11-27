@@ -1,13 +1,13 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Brand from '../components/Brand.jsx';
 import Icon from '../components/Icon.jsx';
 import Segmented from '../components/Segmented.jsx';
-import { HERO_IMAGE, HERO_IMAGE_ALT, ROLE_HOME, SHOW_SAMPLE_LABELS } from '../config.js';
+import { HERO_IMAGE, HERO_IMAGE_ALT, ROLE_HOME } from '../config.js';
+import { apiRequest } from '../lib/api.js';
 import usePageTitle from '../lib/usePageTitle.js';
 import './login.css';
 
-/** The sign-in method for each role is an assumption to confirm with the college IT team. */
 const ROLES = {
   student: {
     label: 'Student',
@@ -19,8 +19,8 @@ const ROLES = {
   mentor: {
     label: 'Alumni mentor',
     idLabel: 'Email or mobile number',
-    placeholder: 'The email you use on the alumni portal',
-    hint: 'Alumni mentors sign in with their PSG Tech alumni portal account.',
+    placeholder: 'The email or mobile used on your profile',
+    hint: 'Use the email or mobile number registered on your profile.',
     profile: 'mentor',
   },
   coordinator: {
@@ -42,24 +42,39 @@ export default function Login() {
   usePageTitle('Sign in');
 
   const navigate = useNavigate();
-  const [role, setRole] = useState('student');
-  const [method, setMethod] = useState('password');
+  const { search } = useLocation();
+  const requestedRole = new URLSearchParams(search).get('role');
+  const initialRole = requestedRole === 'mentor' || requestedRole === 'coordinator' ? requestedRole : 'student';
+  const [role, setRole] = useState(initialRole);
   const [showPassword, setShowPassword] = useState(false);
-  const [codeSent, setCodeSent] = useState(false);
+  const [identifier, setIdentifier] = useState('');
+  const [password, setPassword] = useState('');
+  const [remember, setRemember] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState('');
   const r = ROLES[role];
 
   const pickRole = (next) => {
     setRole(next);
-    setCodeSent(false);
+    setIdentifier('');
+    setPassword('');
+    setError('');
   };
-  const toggleMethod = () => {
-    setMethod((m) => (m === 'password' ? 'code' : 'password'));
-    setCodeSent(false);
-  };
-  const submit = (event) => {
+  const submit = async (event) => {
     event.preventDefault();
-    // Wireframe: no credentials are checked or sent. Call the college's sign-in service here.
-    navigate(ROLE_HOME[role]);
+    setSubmitting(true);
+    setError('');
+    try {
+      await apiRequest('/auth/login', {
+        method: 'POST',
+        body: JSON.stringify({ role: r.profile, identifier, password, remember }),
+      });
+      navigate(ROLE_HOME[role], { replace: true });
+    } catch (requestError) {
+      setError(requestError.message);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -115,7 +130,7 @@ export default function Login() {
               options={Object.entries(ROLES).map(([value, x]) => ({ value, label: x.label }))}
             />
 
-            <form className="stack" style={{ '--gap': '18px' }} onSubmit={submit} noValidate>
+            <form className="stack" style={{ '--gap': '18px' }} onSubmit={submit}>
               <div className="field">
                 <label className="field__label" htmlFor="login-id">
                   {r.idLabel}
@@ -127,88 +142,61 @@ export default function Login() {
                   className="control auth-input"
                   autoComplete="username"
                   placeholder={r.placeholder}
+                  value={identifier}
+                  onChange={(event) => setIdentifier(event.target.value)}
+                  required
                 />
               </div>
 
-              {method === 'password' ? (
-                <>
-                  <div className="field">
-                    <label className="field__label" htmlFor="login-password">
-                      Password
-                    </label>
-                    <div className="password">
-                      <input
-                        id="login-password"
-                        name="password"
-                        className="password__input"
-                        type={showPassword ? 'text' : 'password'}
-                        autoComplete="current-password"
-                      />
-                      <button
-                        type="button"
-                        className="password__toggle"
-                        aria-pressed={showPassword}
-                        aria-label={showPassword ? 'Hide password' : 'Show password'}
-                        onClick={() => setShowPassword((v) => !v)}
-                      >
-                        <Icon name={showPassword ? 'eyeOff' : 'eye'} size={20} />
-                      </button>
-                    </div>
-                  </div>
-                  <div className="row row--between">
-                    <label className="auth-keep">
-                      <input type="checkbox" name="remember" />
-                      Keep me signed in
-                    </label>
-                    <a href="#signin-title" className="text-link" style={{ fontSize: 15 }}>
-                      Forgot password?
-                    </a>
-                  </div>
-                </>
-              ) : (
-                <div className="stack" style={{ '--gap': '10px' }}>
-                  {codeSent ? (
-                    <>
-                      <p role="status" className="status status--good">
-                        Code sent to your registered email or mobile
-                      </p>
-                      <div className="field">
-                        <label className="field__label" htmlFor="login-code">
-                          6-digit code
-                        </label>
-                        <input
-                          id="login-code"
-                          name="code"
-                          className="control auth-code"
-                          inputMode="numeric"
-                          autoComplete="one-time-code"
-                          maxLength={6}
-                          placeholder="______"
-                        />
-                      </div>
-                    </>
-                  ) : (
-                    <button
-                      type="button"
-                      className="btn btn--outline btn--sm"
-                      style={{ alignSelf: 'flex-start' }}
-                      onClick={() => setCodeSent(true)}
-                    >
-                      Send me a one-time code
-                    </button>
-                  )}
+              <div className="field">
+                <label className="field__label" htmlFor="login-password">
+                  Password
+                </label>
+                <div className="password">
+                  <input
+                    id="login-password"
+                    name="password"
+                    className="password__input"
+                    type={showPassword ? 'text' : 'password'}
+                    autoComplete="current-password"
+                    value={password}
+                    onChange={(event) => setPassword(event.target.value)}
+                    required
+                  />
+                  <button
+                    type="button"
+                    className="password__toggle"
+                    aria-pressed={showPassword}
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                    onClick={() => setShowPassword((v) => !v)}
+                  >
+                    <Icon name={showPassword ? 'eyeOff' : 'eye'} size={20} />
+                  </button>
                 </div>
-              )}
+              </div>
+              <div className="row row--between">
+                <label className="auth-keep">
+                  <input
+                    type="checkbox"
+                    name="remember"
+                    checked={remember}
+                    onChange={(event) => setRemember(event.target.checked)}
+                  />
+                  Keep me signed in
+                </label>
+              </div>
+              {error ? (
+                <p role="alert" className="status status--warn">
+                  {error}
+                </p>
+              ) : null}
 
-              <button type="submit" className="btn btn--gold btn--lg btn--block">
-                Sign in
+              <button type="submit" className="btn btn--gold btn--lg btn--block" disabled={submitting}>
+                {submitting ? 'Signing in…' : 'Sign in'}
                 <Icon name="arrowRight" size={18} strokeWidth={2.2} />
               </button>
             </form>
 
-            <button type="button" className="btn btn--link" style={{ alignSelf: 'center' }} onClick={toggleMethod}>
-              {method === 'password' ? 'Sign in with a one-time code instead' : 'Sign in with a password instead'}
-            </button>
             <p className="slate small" style={{ textAlign: 'center' }}>
               {r.hint}
             </p>
@@ -220,12 +208,6 @@ export default function Login() {
             <Link to={`/profile?role=${r.profile}`} className="btn btn--outline btn--block">
               Create your profile
             </Link>
-            {SHOW_SAMPLE_LABELS ? (
-              <p className="note" style={{ textAlign: 'center' }}>
-                Wireframe: nothing typed here is sent or stored. Sign-in method to be confirmed with the college IT
-                team.
-              </p>
-            ) : null}
           </section>
         </div>
       </main>
