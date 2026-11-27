@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import SiteHeader from '../components/SiteHeader.jsx';
 import SiteFooter from '../components/SiteFooter.jsx';
 import Icon from '../components/Icon.jsx';
@@ -63,6 +64,14 @@ export default function Dashboard() {
   return (
     <div className="page-soft">
       <SiteHeader />
+      <div className="container dash-breadcrumb-row">
+        <nav className="dash-breadcrumb" aria-label="Breadcrumb">
+          <Link to="/">Home</Link>
+          <Icon name="chevronRight" size={16} />
+          <span aria-current="page">Impact dashboard</span>
+        </nav>
+        <Link to="/" className="dash-back-link"><Icon name="arrowLeft" size={17} /> Back to Home</Link>
+      </div>
       <main className="container page-main">
         <div className="row row--between" style={{ alignItems: 'flex-end' }}>
           <div className="page-title">

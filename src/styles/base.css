@@ -722,6 +722,9 @@ button.step {
   .container {
     padding-inline: 20px;
   }
+  body {
+    padding-bottom: calc(68px + env(safe-area-inset-bottom));
+  }
   .section {
     padding-block: 56px;
   }

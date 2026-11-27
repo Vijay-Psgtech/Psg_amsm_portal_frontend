@@ -2,7 +2,7 @@
 
 The React/Vite portal and Node/Express API for the program. Profile registration and password sign-in use MongoDB; the mentoring portals, dashboard, and program content still use sample data.
 
-The frontend follows the faculty deck's Vision, Mission, frameworks (STAR, IDEA, GRAD), 1:5 mentor pods, and sample portal design.
+The frontend follows the faculty deck's Vision, Mission, five pillars, frameworks (STAR, IDEA, GRAD), 1:5 mentor pods, and sample portal design. Public program information, student portal, and mentor portal pages share responsive navigation; on small screens the main navigation moves to a bottom bar.
 
 ## Quick start
 
@@ -40,13 +40,19 @@ The app's `AuthProvider` loads and owns the current user/profile and exposes log
 
 | Address | Page | What it shows |
 |---|---|---|
-| `/` | Home | From classroom learning to industry readiness, Vision and Mission, the five pillars, the three paths, the 1:5 mentor pod and the four-session journey |
-| `/frameworks` | Frameworks | STAR, IDEA and GRAD on the shared four-step rhythm (Understand, Define, Act, Review), with a step-by-step mentor guide for each path |
-| `/dashboard` | Impact dashboard | Students reached by framework, mentor industry and stage; road to scale; every mentor pod and each student's step (sample data) |
+| `/` | Home | Program introduction, sample impact figures, expandable Vision and Mission, and links to the program information pages |
+| `/pillars` | Five pillars | The five program pillars and their intended outcomes |
+| `/frameworks` | Framework | STAR, IDEA and GRAD on the shared four-step rhythm (Understand, Define, Act, Review), with a step-by-step mentor guide for each path |
+| `/journey` | Mentorship journey | Four session plans, phases, and outcomes |
+| `/dashboard` | Impact dashboard | Coordinator-protected view of students reached by framework, mentor industry and stage; road to scale; every mentor pod and each student's step (sample data) |
 | `/login` | Sign in | Password sign-in for students, alumni mentors and program coordinators |
 | `/profile?role=mentor` | Bio-data | Register mentor, mentee (`role=mentee`) and program coordinator (`role=coordinator`) profiles |
-| `/student` | Student portal | Choose a path, pick a mentor, attach an industry problem, send the request (sample data) |
-| `/mentor` | Mentor portal | Mentor directory, industry problem pool, mentee requests, and progress for the mentor's pod (sample data) |
+| `/student` | Student overview | Request status and links to the student's portal pages |
+| `/student/request` | Request a mentor | Four-step request flow: choose a path, pick a mentor, attach a problem, review and send |
+| `/student/progress` | My progress | Session plan and selected framework steps |
+| `/mentor` | Mentor overview | Next session, mentee requests, pod roster and quick actions |
+| `/mentor/mentees` | My mentees | Framework progress and session feedback for the mentor's pod |
+| `/mentor/problems` | Industry problems | Problem pool, filters, and a form to suggest a workplace problem |
 
 Any other address goes back to Home.
 
@@ -62,7 +68,7 @@ src/
   main.jsx              Starts the app and the router
   App.jsx               The list of pages (routes)
   config.js             Site-wide settings and wireframe switches
-  pages/                One file per page, each with its own .css
+  pages/                Route-level pages and page-specific styles
   components/           Shared pieces: headers, footer, icons, form fields,
                         framework chips, step chips, pod diagram
   context/              Global authentication and current-user state
@@ -123,16 +129,16 @@ Mentors are grouped by **industry** (Manufacturing, Energy, Construction, Chemic
 
 ## Connecting real data
 
-The mentoring workflows and dashboard still read sample data from `src/data/`. The remaining connections are:
+The mentoring workflows and dashboard still read sample data from `src/data/`. Profile registration and login are connected to the API; student requests, mentor actions, session feedback, and dashboard records remain illustrative and local to the page. The remaining connections are:
 
 | Where | What to connect |
 |---|---|
 | `server/routes/authRoutes.js`, `server/controllers/authController.js` | Profile registration, password login and session lookup |
-| `src/pages/StudentPortal.jsx`, `send` | Sending a mentor request; load mentors and problems from the API instead of `data/` |
+| `src/pages/StudentPortal.jsx`, `advance` | Persisting a mentor request; load mentors and problems from the API instead of `data/` |
 | `src/pages/MentorPortal.jsx`, `accept`, `decline`, `undo`, `addProblem`, `recordSession`, `saveFeedback` and the step chips | The mentor's pod, requests, sessions and feedback |
 | `src/pages/Dashboard.jsx` with `src/data/pods.js` | Pod records. The calculations in `src/lib/dashboard.js` take pods in the same shape as `pods.js`, so only the data source needs to change |
 
-Each of these places has a comment starting `Wireframe:`.
+Mentor handlers are marked as local sample interactions in `MentorPortal.jsx`; the student request page notes that its current submission is not yet persisted.
 
 ## Settings
 

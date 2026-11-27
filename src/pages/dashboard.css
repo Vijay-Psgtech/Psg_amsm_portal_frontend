@@ -14,6 +14,30 @@
   font-size: 14px;
   font-weight: 700;
 }
+.dash-breadcrumb-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 18px;
+  padding-block: 12px;
+  background: var(--bg-soft);
+}
+.dash-breadcrumb,
+.dash-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 15px;
+}
+.dash-breadcrumb {
+  color: var(--muted);
+}
+.dash-breadcrumb a,
+.dash-back-link {
+  font-weight: 700;
+  text-decoration: none;
+}
 
 /* Road to scale */
 .dash-scale {

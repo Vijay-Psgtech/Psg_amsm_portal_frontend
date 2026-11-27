@@ -51,16 +51,18 @@
   letter-spacing: 0.18em;
   color: var(--gold);
 }
-.site-nav {
+.primary-nav {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 4px;
   margin-left: auto;
 }
-.site-nav__link {
+.primary-nav__link {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  gap: 8px;
   min-height: 44px;
   padding: 10px 14px;
   border-radius: 8px;
@@ -69,15 +71,15 @@
   font-weight: 700;
   text-decoration: none;
 }
-.site-nav__link:hover {
+.primary-nav__link:hover {
   background: rgba(255, 255, 255, 0.1);
   color: #fff;
 }
-.site-nav__link.is-active {
+.primary-nav__link.is-active {
   background: rgba(255, 255, 255, 0.12);
   color: var(--gold);
 }
-.site-nav .btn {
+.site-header__login {
   margin-left: 6px;
 }
 .header-link {
@@ -294,12 +296,50 @@
   .brand__tag {
     display: none;
   }
-  .site-nav,
+  .primary-nav {
+    position: fixed;
+    z-index: 20;
+    inset: auto 0 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0;
+    margin: 0;
+    padding: 6px 8px calc(6px + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--line);
+    background: #fff;
+    box-shadow: 0 -4px 18px rgba(27, 42, 74, 0.1);
+  }
+  .primary-nav__link {
+    min-width: 0;
+    min-height: 52px;
+    flex-direction: column;
+    gap: 2px;
+    padding: 4px 2px;
+    border-radius: 8px;
+    color: var(--slate);
+    font-size: 12px;
+    line-height: 1.15;
+    text-align: center;
+  }
+  .primary-nav__link:hover {
+    background: var(--bg-soft);
+    color: var(--navy);
+  }
+  .primary-nav__link.is-active {
+    background: var(--bg-soft);
+    color: var(--navy);
+  }
+  .site-header__login {
+    margin-left: auto;
+  }
   .portal-tools {
     margin-left: 0;
   }
   .portal-tools {
     width: 100%;
+  }
+  .portal-search {
+    display: none;
   }
   .portal-search {
     flex: 1 1 100%;
@@ -310,11 +350,15 @@
     min-width: 0;
   }
   .subnav__meta {
-    margin-left: 0;
-    width: 100%;
-    padding-bottom: 10px;
-  }
-  .subnav__meta .vrule {
     display: none;
+  }
+  .subnav__inner {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: thin;
+  }
+  .subnav__link {
+    flex: none;
+    white-space: nowrap;
   }
 }

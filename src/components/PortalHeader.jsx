@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Brand from './Brand.jsx';
 import Icon from './Icon.jsx';
+import MainNavigation from './MainNavigation.jsx';
 import { SHOW_SAMPLE_LABELS } from '../config.js';
 import { useAuth } from '../context/AuthContext.jsx';
 import { initials } from '../lib/format.js';
@@ -13,6 +14,7 @@ import { initials } from '../lib/format.js';
  */
 export default function PortalHeader({ user, tabs, view }) {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const { user: authUser, logout } = useAuth();
   const [signingOut, setSigningOut] = useState(false);
   const [signOutError, setSignOutError] = useState('');
@@ -40,6 +42,7 @@ export default function PortalHeader({ user, tabs, view }) {
       <header className="portal-header">
         <div className="container portal-header__inner">
           <Brand />
+          <MainNavigation />
           <div className="portal-tools">
             <label className="portal-search">
               <Icon name="search" size={18} />
@@ -67,7 +70,12 @@ export default function PortalHeader({ user, tabs, view }) {
         <div className="container subnav__inner">
           {tabs.map((tab, i) =>
             tab.to ? (
-              <Link key={tab.label} to={tab.to} className="subnav__link">
+              <Link
+                key={tab.label}
+                to={tab.to}
+                className={'subnav__link' + (pathname === tab.to ? ' is-active' : '')}
+                aria-current={pathname === tab.to ? 'page' : undefined}
+              >
                 {tab.label}
               </Link>
             ) : (
