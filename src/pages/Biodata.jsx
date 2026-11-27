@@ -3,9 +3,9 @@ import { Link, useLocation } from 'react-router-dom';
 import Brand from '../components/Brand.jsx';
 import Icon from '../components/Icon.jsx';
 import { CheckField, ChipField, SelectField, TextField } from '../components/Field.jsx';
-import { SHOW_SAMPLE_LABELS } from '../config.js';
 import { DEPARTMENTS, FRAMEWORKS, PROFILE_INDUSTRIES, TRACKS, TRACK_FRAMEWORK, frameworkOfTrack } from '../data/taxonomy.js';
 import { initials, pct } from '../lib/format.js';
+import { apiRequest } from '../lib/api.js';
 import usePageTitle from '../lib/usePageTitle.js';
 import './biodata.css';
 
@@ -23,6 +23,29 @@ const DUTIES = {
 };
 
 const FORMATS = ['Online', 'In person (on campus)', 'Either'];
+const ACCOUNT_SECTION = {
+  title: 'Account security',
+  fields: [
+    {
+      name: 'password',
+      label: 'Password',
+      type: 'password',
+      required: true,
+      minLength: 8,
+      maxLength: 72,
+      autoComplete: 'new-password',
+      hint: 'Use at least 8 characters.',
+    },
+    {
+      name: 'confirmPassword',
+      label: 'Confirm password',
+      type: 'password',
+      required: true,
+      maxLength: 72,
+      autoComplete: 'new-password',
+    },
+  ],
+};
 
 /**
  * The bio-data forms, as data. Field types: text (default), email, tel, url,
@@ -169,32 +192,15 @@ const FORMS = {
   ],
 };
 
-/** Sample values so the preview has something to show. */
-const SAMPLE_VALUES = {
-  mentor: {
-    name: 'Vimal S.',
-    batch: '1994–98',
-    city: 'Chennai, India',
-    role: 'Engineering Manager',
-    industry: 'Information Technology',
-    tracks: ['Career', 'Entrepreneur'],
-    pods: '1',
-    format: 'Online',
-    slots: ['Weekend mornings'],
-    timezone: 'IST (India)',
-  },
-  mentee: { name: 'Nila V.', dept: 'Production', year: '3rd year (pre-final)', path: 'STAR' },
-  coordinator: { programRole: 'Department tutor' },
-};
-
 const MULTI = new Set(['multichips']);
 const emptyValue = (field) => (MULTI.has(field.type) ? [] : field.type === 'check' ? false : '');
+const sectionsForRole = (role) => [...FORMS[role], ACCOUNT_SECTION];
 const initialValues = () =>
   Object.fromEntries(
     Object.entries(FORMS).map(([role, sections]) => {
       const values = {};
-      sections.forEach((s) => s.fields.forEach((f) => (values[f.name] = emptyValue(f))));
-      return [role, { ...values, ...SAMPLE_VALUES[role] }];
+      [...sections, ACCOUNT_SECTION].forEach((s) => s.fields.forEach((f) => (values[f.name] = emptyValue(f))));
+      return [role, values];
     })
   );
 
@@ -206,17 +212,17 @@ const isFilled = (value) => (Array.isArray(value) ? value.length > 0 : typeof va
 
 const DONE = {
   mentor: {
-    title: 'Profile submitted',
-    body: 'The program team reviews your profile and pairs you with a pod of five students.',
-    to: '/mentor',
-    cta: 'Go to the mentor portal',
+    title: 'Profile saved',
+    body: 'Your profile is ready. Sign in to continue to the mentor portal.',
+    to: '/login?role=mentor',
+    cta: 'Sign in',
   },
-  mentee: { title: 'Profile saved', body: 'Next, request a mentor who supports your path.', to: '/student', cta: 'Request a mentor' },
+  mentee: { title: 'Profile saved', body: 'Your profile is ready. Sign in to request a mentor.', to: '/login?role=student', cta: 'Sign in' },
   coordinator: {
     title: 'Profile saved',
-    body: 'Your pods, attendance and completion appear on the impact dashboard.',
-    to: '/dashboard',
-    cta: 'Open the impact dashboard',
+    body: 'Your profile is ready. Sign in to continue to the program dashboard.',
+    to: '/login?role=coordinator',
+    cta: 'Sign in',
   },
 };
 
@@ -280,29 +286,60 @@ export default function Biodata() {
   const [role, setRole] = useState(FORMS[asked] ? asked : 'mentor');
   const [values, setValues] = useState(initialValues);
   const [submitted, setSubmitted] = useState(false);
-  const [saved, setSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
 
   const v = values[role];
-  const sections = FORMS[role];
+  const sections = sectionsForRole(role);
   const required = sections.flatMap((s) => s.fields.filter((f) => f.required));
   const missing = required.filter((f) => !isFilled(v[f.name]));
-  const complete = missing.length === 0;
-  const done = required.length - missing.length;
+  const passwordValid = v.password.length >= 8 && new TextEncoder().encode(v.password).length <= 72;
+  const passwordMatches = v.password === v.confirmPassword;
+  const done = required.filter(
+    (field) =>
+      isFilled(v[field.name]) &&
+      (field.name !== 'password' || passwordValid) &&
+      (field.name !== 'confirmPassword' || passwordMatches)
+  ).length;
+  const complete = done === required.length;
+  const missingLabels = [
+    ...missing.map(missingName),
+    !passwordValid && v.password ? 'a password of at least 8 characters' : null,
+    !passwordMatches && v.confirmPassword ? 'matching passwords' : null,
+  ].filter(Boolean);
   const pv = preview(role, v);
 
   const pickRole = (key) => {
     setRole(key);
     setSubmitted(false);
-    setSaved(false);
+    setError('');
   };
   const setField = (name) => (value) => {
     setValues((current) => ({ ...current, [role]: { ...current[role], [name]: value } }));
-    setSaved(false);
+    setError('');
   };
-  const submit = (event) => {
+  const submit = async (event) => {
     event.preventDefault();
-    // Wireframe: nothing is sent. Post the profile to the portal's API here.
-    if (complete) setSubmitted(true);
+    if (!complete) return;
+
+    setSaving(true);
+    setError('');
+    const { password, confirmPassword: _confirmPassword, ...profile } = v;
+    try {
+      await apiRequest('/auth/register', {
+        method: 'POST',
+        body: JSON.stringify({ role, profile, password }),
+      });
+      setValues((current) => ({
+        ...current,
+        [role]: { ...current[role], password: '', confirmPassword: '' },
+      }));
+      setSubmitted(true);
+    } catch (requestError) {
+      setError(requestError.message);
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -329,11 +366,6 @@ export default function Biodata() {
               Bio-data
             </span>
           </nav>
-          {SHOW_SAMPLE_LABELS ? (
-            <span className="subnav__meta">
-              <em>Sample view · illustrative data</em>
-            </span>
-          ) : null}
         </div>
       </div>
 
@@ -397,7 +429,11 @@ export default function Biodata() {
                 <div className="bio-meter__fill" style={{ width: `${pct(done, required.length)}%` }} />
               </div>
               <span className="slate small">
-                {complete ? 'All required fields are complete.' : `Still needed: ${missing.map(missingName).join(', ')}.`}
+                {complete
+                  ? 'All required fields are complete.'
+                  : missingLabels.length > 0
+                    ? `Still needed: ${missingLabels.join(', ')}.`
+                    : 'Complete the required fields to save your profile.'}
               </span>
             </div>
 
@@ -449,18 +485,14 @@ export default function Biodata() {
               </div>
             ) : (
               <div className="card stack" style={{ '--gap': '10px', padding: '20px 22px' }}>
-                <button type="submit" className="btn btn--gold btn--lg btn--block" disabled={!complete}>
-                  Submit profile
-                </button>
-                <button type="button" className="btn btn--outline btn--sm" onClick={() => setSaved(true)}>
-                  Save draft
-                </button>
-                {saved ? (
-                  <p role="status" className="small" style={{ color: 'var(--good)', fontWeight: 700 }}>
-                    Draft saved. You can come back and finish later.
+                {error ? (
+                  <p className="status status--warn" role="alert">
+                    {error}
                   </p>
                 ) : null}
-                {SHOW_SAMPLE_LABELS ? <p className="note">Wireframe: nothing entered here is sent or stored.</p> : null}
+                <button type="submit" className="btn btn--gold btn--lg btn--block" disabled={!complete || saving}>
+                  {saving ? 'Saving profile…' : 'Save profile'}
+                </button>
               </div>
             )}
           </aside>
@@ -504,6 +536,19 @@ function FormField({ field, values, onChange, idPrefix }) {
         </div>
       );
     default:
-      return <TextField id={id} {...common} type={field.type || 'text'} value={value} onChange={onChange} placeholder={field.placeholder} hint={field.hint} />;
+      return (
+        <TextField
+          id={id}
+          {...common}
+          type={field.type || 'text'}
+          value={value}
+          onChange={onChange}
+          placeholder={field.placeholder}
+          hint={field.hint}
+          minLength={field.minLength}
+          maxLength={field.maxLength}
+          autoComplete={field.autoComplete}
+        />
+      );
   }
 }

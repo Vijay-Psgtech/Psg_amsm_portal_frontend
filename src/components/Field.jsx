@@ -31,6 +31,9 @@ export function TextField({
   placeholder,
   multiline = false,
   rows = 3,
+  minLength,
+  maxLength,
+  autoComplete,
 }) {
   const hintId = hint ? `${id}-hint` : undefined;
   const props = {
@@ -40,6 +43,9 @@ export function TextField({
     value: value ?? '',
     onChange: (e) => onChange(e.target.value),
     placeholder,
+    minLength,
+    maxLength,
+    autoComplete,
     'aria-required': required || undefined,
     'aria-describedby': hintId,
   };
