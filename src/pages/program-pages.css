@@ -1,0 +1,165 @@
+.program-page-nav {
+  background: var(--bg-soft);
+  border-bottom: 1px solid var(--line);
+}
+.program-page-nav__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 20px;
+  padding-block: 12px;
+}
+.program-breadcrumb,
+.program-about-nav,
+.program-about-nav__link,
+.program-pager,
+.program-pager a {
+  display: flex;
+  align-items: center;
+}
+.program-breadcrumb {
+  flex-wrap: wrap;
+  gap: 7px;
+  color: var(--muted);
+  font-size: 15px;
+}
+.program-breadcrumb a,
+.program-pager a {
+  font-weight: 700;
+  text-decoration: none;
+}
+.program-about-nav {
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.program-about-nav__link {
+  min-height: 40px;
+  padding: 6px 16px;
+  border: 1px solid var(--line-2);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--navy);
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+}
+.program-about-nav__link:hover {
+  border-color: var(--navy);
+}
+.program-about-nav__link.is-active {
+  border-color: var(--navy);
+  background: var(--navy);
+  color: #fff;
+}
+.program-about-page {
+  padding-block: 40px 56px;
+  background: #fff;
+}
+.program-pillar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 28px;
+  align-items: center;
+  padding: 24px 26px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: #fff;
+  box-shadow: var(--shadow-sm);
+}
+.program-pillar__heading {
+  flex: 0 1 300px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.program-pillar__num {
+  color: var(--gold-dark);
+  font-family: var(--font-serif);
+  font-size: 44px;
+  font-weight: 700;
+  line-height: 1;
+}
+.program-pillar__tagline {
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.program-pillar__points {
+  flex: 1 1 360px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: var(--slate);
+  font-size: 17px;
+}
+.program-pillar__points li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.program-pillar__points svg {
+  flex: none;
+  margin-top: 3px;
+  color: var(--gold-dark);
+}
+.program-journey-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: #fff;
+  box-shadow: var(--shadow-sm);
+}
+.program-journey-card__title {
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.program-journey-card__outcome {
+  display: flex;
+  flex-direction: column;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--bg-soft);
+}
+.program-pager {
+  justify-content: space-between;
+  gap: 12px;
+  border-top: 1px solid var(--line);
+  padding-top: 20px;
+}
+.program-pager a {
+  min-height: 44px;
+  gap: 8px;
+}
+.program-join__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px 32px;
+}
+.program-join .sub {
+  color: var(--line-2);
+}
+
+@media (max-width: 640px) {
+  .program-page-nav__inner {
+    align-items: flex-start;
+  }
+  .program-about-nav {
+    flex-wrap: nowrap;
+    max-width: 100%;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+  .program-about-nav__link {
+    flex: none;
+  }
+  .program-pillar {
+    padding: 20px;
+  }
+}

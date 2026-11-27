@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import SiteHeader from '../components/SiteHeader.jsx';
 import SiteFooter from '../components/SiteFooter.jsx';
 import Icon from '../components/Icon.jsx';
+import { AboutNavigation, ProgramPager } from '../components/ProgramPageComponents.jsx';
 import { FRAMEWORKS, FRAMEWORK_KEYS, RHYTHM } from '../data/taxonomy.js';
 import { GUIDES } from '../data/frameworks.js';
 import usePageTitle from '../lib/usePageTitle.js';
@@ -21,6 +22,7 @@ export default function Frameworks() {
   return (
     <>
       <SiteHeader />
+      <AboutNavigation active="frameworks" />
       <main>
         <section className="section section--soft fw-intro" aria-labelledby="fw-title">
           <div className="container stack" style={{ '--gap': '26px' }}>
@@ -116,7 +118,7 @@ export default function Frameworks() {
                 </p>
               </div>
               <div className="row">
-                <Link to="/student" className="btn btn--gold btn--lg">
+                <Link to="/student/request" className="btn btn--gold btn--lg">
                   Request a mentor
                   <Icon name="arrowRight" size={20} strokeWidth={2.2} />
                 </Link>
@@ -127,6 +129,9 @@ export default function Frameworks() {
             </div>
           </div>
         </section>
+        <div className="container" style={{ paddingBottom: 24 }}>
+          <ProgramPager previous={{ to: '/pillars', label: 'The five pillars' }} next={{ to: '/journey', label: 'Next: The mentorship journey' }} />
+        </div>
       </main>
       <SiteFooter />
     </>

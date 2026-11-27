@@ -3,7 +3,9 @@ import { PROGRAM_CONTACT_EMAIL } from '../config.js';
 
 const LINKS = [
   { to: '/', label: 'Home' },
+  { to: '/pillars', label: 'Five pillars' },
   { to: '/frameworks', label: 'Frameworks' },
+  { to: '/journey', label: 'Mentorship journey' },
   { to: '/dashboard', label: 'Impact dashboard' },
   { to: '/student', label: 'Student portal' },
   { to: '/mentor', label: 'Mentor portal' },
